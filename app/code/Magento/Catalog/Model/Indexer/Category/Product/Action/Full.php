@@ -15,6 +15,23 @@ class Full extends \Magento\Catalog\Model\Indexer\Category\Product\AbstractActio
     protected $useTempTable = false;
 
     /**
+     * @inheritdoc
+     */
+    protected function isRangingNeeded()
+    {
+        /**
+         * Batching has no obvious improvement on performance regardless data volume, as the bottleneck is on three
+         * `LEFT JOIN` statements, which bring the whole `catalog_category_entity_int` table in.
+         *
+         * Disabling batching not only avoid product category association missing due to corrupted stepping, but also
+         * speed up the reindex process.
+         *
+         * Until an alternative approach is introduced to eliminate `LEFT JOIN`, batching should be disabled.
+         */
+        return false;
+    }
+
+    /**
      * Refresh entities index
      *
      * @return $this
