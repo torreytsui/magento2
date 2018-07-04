@@ -12,5 +12,10 @@
         <cdata_subnode_with_linebreak>
             <![CDATA[Some Other CDATA Phrase With Line Break]]>
         </cdata_subnode_with_linebreak>
+        <cdata_subnode_with_linebreak_in>
+            <![CDATA[
+            Some Other CDATA Phrase With Line Break
+        ]]>
+        </cdata_subnode_with_linebreak_in>
     </node>
 </root>
