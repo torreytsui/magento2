@@ -124,7 +124,7 @@ class Dom extends ConfigDom
     private function processMatchedNodes(\DOMNodeList $rootMatchList, \DOMElement $insertedItem)
     {
         foreach ($rootMatchList as $rootItem) {
-            if ($this->_isTextNode($insertedItem) && $this->_isTextNode($rootItem)) {
+            if ($this->_isTextEquivalentNode($insertedItem) && $this->_isTextEquivalentNode($rootItem)) {
                 $rootItem->nodeValue = $insertedItem->nodeValue;
             } else {
                 $this->nestedMerge($rootItem, $insertedItem->childNodes);

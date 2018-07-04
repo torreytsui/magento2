@@ -186,10 +186,10 @@ class Dom
                 return;
             }
             /* override node value */
-            if ($this->_isTextNode($node)) {
+            if ($this->_isTextEquivalentNode($node)) {
                 /* skip the case when the matched node has children, otherwise they get overridden */
-                if (!$matchedNode->hasChildNodes() || $this->_isTextNode($matchedNode)) {
-                    $matchedNode->nodeValue = $node->childNodes->item(0)->nodeValue;
+                if (!$matchedNode->hasChildNodes() || $this->_isTextEquivalentNode($matchedNode)) {
+                    $matchedNode->nodeValue = $node->nodeValue;
                 }
             } else {
                 /* recursive merge for all child nodes */
@@ -208,14 +208,51 @@ class Dom
     }
 
     /**
-     * Check if the node content is text
+     * Check if the node content is text or text equivalent content (e.g., CDATA)
      *
      * @param \DOMElement $node
      * @return bool
      */
-    protected function _isTextNode($node)
+    protected function _isTextEquivalentNode($node)
     {
-        return $node->childNodes->length == 1 && $node->childNodes->item(0) instanceof \DOMText;
+        if ($node->childNodes->length == 1 && $node->childNodes->item(0) instanceof \DOMText) {
+            // DOMText: e.g., Some Phrase
+            return true;
+        } elseif (
+            $node->childNodes->length == 3 &&
+            $node->childNodes->item(0) instanceof \DOMCdataSection &&
+            $node->childNodes->item(1) instanceof \DOMText &&
+            $node->childNodes->item(2) instanceof \DOMCdataSection
+        ) {
+            /**
+             * DOMCdataSection
+             *
+             * Example:
+             *
+             * <node>
+             *     <![CDATA[Some Phrase]]>
+             * </node>
+             */
+            return true;
+        } elseif (
+            $node->childNodes->length == 3 &&
+            $node->childNodes->item(0) instanceof \DOMText &&
+            $node->childNodes->item(1) instanceof \DOMCdataSection &&
+            $node->childNodes->item(2) instanceof \DOMText
+        ) {
+            /**
+             * DOMCdataSection
+             *
+             * Example:
+             *
+             * <node><![CDATA[
+             *     Some Phrase
+             * ]]></node>
+             */
+            return true;
+        }
+
+        return false;
     }
 
     /**
