@@ -8,5 +8,9 @@
 <root>
     <node>
         <subnode>Some Phrase</subnode>
+        <cdata_subnode><![CDATA[Some CDATA Phrase]]></cdata_subnode>
+        <cdata_subnode_with_linebreak>
+            <![CDATA[Some CDATA Phrase With Line Break]]>
+        </cdata_subnode_with_linebreak>
     </node>
 </root>
